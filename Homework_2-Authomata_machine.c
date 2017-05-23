@@ -154,7 +154,7 @@ int Extended_transition_function(int state, char *word){
 	else {
 
 		state = AFDToLanguage(state, &(*word));
-		Extended_transition_function(state, ++word);
+		return Extended_transition_function(state, ++word);
 
 	}
 
