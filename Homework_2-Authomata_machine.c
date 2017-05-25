@@ -1,142 +1,143 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
-
-int AFDToLanguage(int state, char *str){ //Regular Expression: b(a+b)b+(a+b)bb(a+b)+(a+b)(a+b)b(&+(a+b)*b)(a+b)(a+b)
+int AFDToLanguage(int state, char str){ //Regular Expression: b(a+b)b+(a+b)bb(a+b)+(a+b)(a+b)b(&+(a+b)*b)(a+b)(a+b)
 
     int i = 0;
-    while(1){
+    //while(1)
+    {
 
-    	if(str[i] == '\0') break;
+    	//if(str == '\0') break;
 
         switch(state){
 
             case 0:
 
-                if(str[i]=='a') state = 2;
+                if(str=='a') state = 2;
 
-                else if(str[i]=='b')state = 1;
+                else if(str=='b')state = 1;
 
                 break;
 
             case 1:
 
-                if(str[i]=='a') state = 4;
+                if(str=='a') state = 4;
 
-                else if(str[i]=='b')state = 3;
+                else if(str=='b')state = 3;
 
                 break;
 
             case 2:
 
-                if(str[i]=='a') state = 6;
+                if(str=='a') state = 6;
 
-                else if(str[i]=='b')state = 5;
+                else if(str=='b')state = 5;
 
                 break;
 
             case 3:
 
-                if(str[i]=='a') state = 8;
+                if(str=='a') state = 8;
 
-                else if(str[i]=='b')state = 7;
+                else if(str=='b')state = 7;
 
                 break;
 
             case 4:
 
-                if(str[i]=='a') state = 8;
+                if(str=='a') state = 8;
 
-                else if(str[i]=='b')state = 9;
+                else if(str=='b')state = 9;
 
                 break;
 
             case 5:
 
-                if(str[i]=='a') state = 8;
+                if(str=='a') state = 8;
 
-                else if(str[i]=='b')state = 10;
+                else if(str=='b')state = 10;
 
                 break;
 
             case 6:
 
-                if(str[i]=='a') state = 8;
+                if(str=='a') state = 8;
 
-                else if(str[i]=='b') state = 11;
+                else if(str=='b') state = 11;
 
                 break;
 
             case 7:
 
-                if(str[i]=='a') state = 12;
+                if(str=='a') state = 12;
 
-                else if(str[i]=='b') state = 7;
+                else if(str=='b') state = 7;
 
                 break;
 
             case 8:
 
-                if(str[i]=='a') state = 8;
+                if(str=='a') state = 8;
 
-                else if(str[i]=='b') state = 8;
+                else if(str=='b') state = 8;
 
                 break;
 
             case 9:
 
-                if(str[i]=='a') state = 13;
+                if(str=='a') state = 13;
 
-                else if(str[i]=='b') state = 10;
+                else if(str=='b') state = 10;
 
                 break;
 
             case 10:
 
-                if(str[i]=='a') state = 12;
+                if(str=='a') state = 12;
 
-                else if(str[i]=='b') state = 7;
+                else if(str=='b') state = 7;
 
                 break;
 
             case 11:
 
-                if(str[i]=='a') state = 13;
+                if(str=='a') state = 13;
 
-                else if(str[i]=='b') state = 10;
+                else if(str=='b') state = 10;
 
                 break;
 
             case 12:
 
-                if(str[i]=='a') state = 14;
+                if(str=='a') state = 14;
 
-                else if(str[i]=='b') state = 9;
+                else if(str=='b') state = 9;
 
                 break;
 
             case 13:
 
-                if(str[i]=='a') state = 14;
+                if(str=='a') state = 14;
 
-                else if(str[i]=='b') state = 9;
+                else if(str=='b') state = 9;
 
                 break;
 
             case 14:
 
-                if(str[i]=='a') state = 15;
+                if(str=='a') state = 15;
 
-                else if(str[i]=='b') state = 11;
+                else if(str=='b') state = 11;
 
                 break;
 
             case 15:
 
-                if(str[i]=='a') state = 15;
+                if(str=='a') state = 15;
 
-                else if(str[i]=='b') state = 11;
+                else if(str=='b') state = 11;
 
                 break;
         }
@@ -148,13 +149,14 @@ int AFDToLanguage(int state, char *str){ //Regular Expression: b(a+b)b+(a+b)bb(a
 }
 
 int Extended_transition_function(int state, char *word){
-
-	if(*word == '\0') return state;
+	if(word[0] == '\0') return state;
 
 	else {
 
-		state = AFDToLanguage(state, &(*word));
-		return Extended_transition_function(state, ++word);
+		char a=word[strlen(word)-1];
+		word[strlen(word)-1]='\0';
+		return AFDToLanguage(Extended_transition_function(state, word), a);
+		//return transictionFunction(word.at(word.length()-1), extendedTransictionFunction(word.left(word.length()-1), initialState));
 
 	}
 
@@ -207,7 +209,8 @@ int main(){
 			    printf("\n\tTHE ENTERED STRING IS: %s\n\n", str);//for(j=0;j<=i;j++) printf("%c",*(str+j));
 
 			    state = Extended_transition_function(0,str);
-		    	
+			    //state = extendedTransictionFunction(0,str);
+		    	printf("ESTADO: %d\n", state);
 		    	if(state == 7 || state == 9 || state == 12 || state == 14) printf("\n\tWas recognized!\n\n");
 			    
 			    else printf("\n\tThis word was not recognized\n\n");

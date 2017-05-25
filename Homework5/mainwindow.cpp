@@ -28,9 +28,8 @@ QString MainWindow::transictionFunction(QString word, QString initialState)
 QString MainWindow::extendedTransictionFunction(QString word, QString initialState)
 {
     if(word.isEmpty()) return initialState;
-    else{
-        initialState = transictionFunction(word.at(word.length()-1), initialState);
-        return extendedTransictionFunction(word.left(word.length()-1), initialState);
+    else{        
+        return transictionFunction(word.at(word.length()-1), extendedTransictionFunction(word.left(word.length()-1), initialState));
     }
 }
 
@@ -47,6 +46,9 @@ void MainWindow::fillMap()
 void MainWindow::on_pushButton_clicked()
 {
     QMessageBox msg;
+    ui->result->clear();
+    this->map.clear();
+
     if(ui->alphabet->text().isEmpty() || ui->spinBox->value()==0){
         msg.warning(0,"Warning", "Complete all fields");
     }
@@ -91,7 +93,7 @@ void MainWindow::on_pushButton_clicked()
             for(int i=0; i<ui->spinBox->value();i++){
                 if(ui->comboBox->currentIndex()==i){
                     str.append("->"+(ui->comboBox->itemText(i)));
-                    ui->comboBox_2->setItemText(i, "->"+ui->comboBox_2->itemText(i));
+                    if(ui->comboBox_2->itemText(i)==ui->comboBox->currentText() && !ui->comboBox_2->itemText(i).contains("->")) ui->comboBox_2->setItemText(i, "->"+ui->comboBox_2->itemText(i));
                 }
                 else
                     str.append(ui->comboBox->itemText(i));
